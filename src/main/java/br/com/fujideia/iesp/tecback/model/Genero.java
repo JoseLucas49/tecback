@@ -6,10 +6,9 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-
+@Entity
 @Data
 @NoArgsConstructor
-@Entity
 public class Genero {
 
     @Id

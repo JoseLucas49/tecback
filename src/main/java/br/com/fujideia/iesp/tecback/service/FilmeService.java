@@ -43,7 +43,7 @@ public class FilmeService {
         return filmeRepository.findById(id).map(filme -> {
             filme.setTitulo(filmeDTO.getTitulo());
             filme.setAnoLancamento(filmeDTO.getAnoLancamento());
-            filme.setDiretor(convertToEntity(filmeDTO.getDiretor()));
+            filme.setDiretor(convertToEntity((FilmeDTO) filmeDTO.getDiretor()).getDiretor());
             filme.setAtores(filmeDTO.getAtores().stream().map(this::convertToEntity).collect(Collectors.toList()));
             filme.setGeneros(filmeDTO.getGeneros().stream().map(this::convertToEntity).collect(Collectors.toList()));
             return convertToDTO(filmeRepository.save(filme));
@@ -63,7 +63,7 @@ public class FilmeService {
                 filme.getId(),
                 filme.getTitulo(),
                 filme.getAnoLancamento(),
-                filme.getDiretor() != null ? new DiretorDTO(filme.getDiretor().getId(), filme.getDiretor().getNome()) : null,
+                filme.getDiretor() != null ? (List<DiretorDTO>) new DiretorDTO(filme.getDiretor().getId(), filme.getDiretor().getNome()) : null,
                 filme.getAtores()
                         .stream()
                         .map(ator -> new AtorDTO(ator.getId(), ator.getNome()))
@@ -80,15 +80,15 @@ public class FilmeService {
         Filme filme = new Filme();
         filme.setTitulo(filmeDTO.getTitulo());
         filme.setAnoLancamento(filmeDTO.getAnoLancamento());
-        filme.setDiretor(convertToEntity(filmeDTO.getDiretor()));
+        filme.setDiretor(convertToEntity((FilmeDTO) filmeDTO.getDiretor()),
         filme.setAtores(filmeDTO.getAtores()
                 .stream()
                 .map(this::convertToEntity)
-                .collect(Collectors.toList()));
+                .collect(Collectors.toList())),
         filme.setGeneros(filmeDTO.getGeneros()
                 .stream()
                 .map(this::convertToEntity)
-                .collect(Collectors.toList()));
+                .collect(Collectors.toList());
         return filme;
     }
 
@@ -112,7 +112,8 @@ public class FilmeService {
     private Genero convertToEntity(GeneroDTO generoDTO) {
         Genero genero = new Genero();
         genero.setId(generoDTO.getId());
-        genero.setNome(generoDTO.getDescricao());
+        genero.setNome(generoDTO.getNome());
         return genero;
     }
+
 }
